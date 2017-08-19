@@ -18,13 +18,12 @@ function create(taskService, taskValidator) {
     function createPostTask() { 
         return (req, res, next) =>{
             
-            const newTask = new model.CreateTask(req.body);
-
-            const validationErrors = taskValidator.validate(newTask);
+            const validationErrors = taskValidator.validate(req.body);
             if (validationErrors ) {
                 return next(new errors.BadRequest("Invalid payload sent", validationErrors));
             }
 
+            const newTask = new model.CreateTask(req.body);
             taskService
                 .createTask(newTask)
                 .then( id => res.status(201).json(newTask))
@@ -55,12 +54,13 @@ function create(taskService, taskValidator) {
 
     function createPutSingle(idParam) { 
         return (req, res, next) =>{
-            const updatedTask = new model.CreateTask(req.body);
-            const validationErrors = taskValidator.validate(updatedTask);
-            if (validationErrors ) {
+
+            const validationErrors = taskValidator.validate(req.body);
+            if  (validationErrors ) {
                 return next(new errors.BadRequest("Invalid payload sent", validationErrors));
             }
 
+            const updatedTask = new model.CreateTask(req.body);
             const taskId = req.params[idParam];
 
             taskService
